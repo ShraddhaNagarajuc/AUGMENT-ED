@@ -37,7 +37,7 @@ export const Hero = ({ onSearch }: HeroProps) => {
             </div>
 
             <h1 className="text-5xl md:text-7xl lg:text-9xl font-black tracking-tighter animate-in fade-in slide-in-from-bottom-4 duration-1000 relative">
-              Augment<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">ED</span>
+              Augment<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">ED</span>
             </h1>
 
             <p className="text-xl md:text-3xl text-muted-foreground/80 font-light leading-relaxed max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-150">
