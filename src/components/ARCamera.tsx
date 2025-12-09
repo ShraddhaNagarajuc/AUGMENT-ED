@@ -406,7 +406,7 @@ export const ARCamera = ({ onClose, onImageRecognized, topicTitle }: ARCameraPro
     const video = videoRef.current;
 
     // Calculate the scanning frame dimensions (the blue box)
-    const frameSize = 288; // 72 * 4 = 288px (w-72 in Tailwind)
+    const frameSize = 320; // 80 * 4 = 320px (w-80 in Tailwind)
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
 
@@ -504,11 +504,12 @@ export const ARCamera = ({ onClose, onImageRecognized, topicTitle }: ARCameraPro
       {/* Overlay UI */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Scanning frame */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 border-4 border-primary rounded-2xl pointer-events-none">
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-secondary rounded-tl-2xl" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-secondary rounded-tr-2xl" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-secondary rounded-bl-2xl" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-secondary rounded-br-2xl" />
+        {/* Scanning frame */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 border-4 border-primary rounded-2xl pointer-events-none">
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-white/50 rounded-tl-2xl" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-white/50 rounded-tr-2xl" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-white/50 rounded-bl-2xl" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-white/50 rounded-br-2xl" />
 
           {isScanning && (
             <div className="absolute inset-0 flex items-center justify-center">
