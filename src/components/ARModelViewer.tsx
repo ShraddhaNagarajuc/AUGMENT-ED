@@ -15,20 +15,20 @@ interface Label3DProps {
 
 const Label3D = ({ position, text, surfacePosition }: Label3DProps) => {
   const { camera } = useThree();
-  
+
   // Calculate if label is visible from camera perspective
   const labelWorldPos = new THREE.Vector3(...surfacePosition);
   const cameraDirection = new THREE.Vector3();
   camera.getWorldDirection(cameraDirection);
-  
+
   const cameraToLabel = labelWorldPos.clone().normalize();
   const dotProduct = cameraToLabel.dot(cameraDirection);
-  
+
   // Hide labels on the back side of Earth (dot product < 0 means facing away)
   const isVisible = dotProduct > -0.3;
-  
+
   if (!isVisible) return null;
-  
+
   return (
     <group position={position}>
       {/* Thick pointer line from label to Earth surface */}
@@ -41,7 +41,7 @@ const Label3D = ({ position, text, surfacePosition }: Label3DProps) => {
         lineWidth={3}
         dashed={false}
       />
-      
+
       {/* HTML Label */}
       <Html
         position={[0, 0, 0]}
@@ -85,7 +85,7 @@ interface Model3DProps {
 const Model3D = ({ modelPath, showContinents, showOceans, topicTitle, showChambers, brainView }: Model3DProps) => {
   // For heart, switch between original and sectioned model based on showChambers
   let actualModelPath = modelPath;
-  
+
   if (topicTitle === "Human Heart" && showChambers) {
     actualModelPath = "/models/heart-sectioned.glb";
   } else if (topicTitle === "Human Brain") {
@@ -95,90 +95,90 @@ const Model3D = ({ modelPath, showContinents, showOceans, topicTitle, showChambe
       actualModelPath = "/models/brain-brainstem.glb";
     }
   }
-  
+
   const { scene } = useGLTF(actualModelPath);
-  
+
   // Clone the scene to avoid modifying the cached version
   const clonedScene = scene.clone();
-  
-  
+
+
   // Earth labels with proper geological positions based on geographic coordinates
   // Unity reference: normalized positions * scale factor
   // labelDistance = 2.4 (normalized * 1.6 * 1.5 scale)
   // surfacePosition = 1.5 (Earth radius with scale)
   const continents = [
-    { 
-      name: "NORTH AMERICA", 
+    {
+      name: "NORTH AMERICA",
       position: [0.84, 1.08, 1.73] as [number, number, number],      // West, Mid-North
-      surfacePosition: [0.525, 0.675, 1.08] as [number, number, number] 
+      surfacePosition: [0.525, 0.675, 1.08] as [number, number, number]
     },
-    { 
-      name: "SOUTH AMERICA", 
+    {
+      name: "SOUTH AMERICA",
       position: [0.67, -0.84, 1.97] as [number, number, number],     // West, South
-      surfacePosition: [0.42, -0.525, 1.23] as [number, number, number] 
+      surfacePosition: [0.42, -0.525, 1.23] as [number, number, number]
     },
-    { 
-      name: "EUROPE", 
+    {
+      name: "EUROPE",
       position: [-0.36, 1.32, 1.87] as [number, number, number],     // Slight East, North
-      surfacePosition: [-0.225, 0.825, 1.17] as [number, number, number] 
+      surfacePosition: [-0.225, 0.825, 1.17] as [number, number, number]
     },
-    { 
-      name: "AFRICA", 
+    {
+      name: "AFRICA",
       position: [-0.19, 0.12, 2.28] as [number, number, number],     // Center-East, Equator
-      surfacePosition: [-0.12, 0.075, 1.425] as [number, number, number] 
+      surfacePosition: [-0.12, 0.075, 1.425] as [number, number, number]
     },
-    { 
-      name: "ASIA", 
+    {
+      name: "ASIA",
       position: [-1.73, 0.91, 1.15] as [number, number, number],     // Far East, North
-      surfacePosition: [-1.08, 0.57, 0.72] as [number, number, number] 
+      surfacePosition: [-1.08, 0.57, 0.72] as [number, number, number]
     },
-    { 
-      name: "AUSTRALIA", 
+    {
+      name: "AUSTRALIA",
       position: [-1.63, -1.01, 1.01] as [number, number, number],    // Far East, South
-      surfacePosition: [-1.02, -0.63, 0.63] as [number, number, number] 
+      surfacePosition: [-1.02, -0.63, 0.63] as [number, number, number]
     },
-    { 
-      name: "ANTARCTICA", 
+    {
+      name: "ANTARCTICA",
       position: [0.0, -2.21, 0.36] as [number, number, number],      // Bottom of globe
-      surfacePosition: [0.0, -1.38, 0.225] as [number, number, number] 
+      surfacePosition: [0.0, -1.38, 0.225] as [number, number, number]
     },
   ];
 
   const oceans = [
-    { 
-      name: "PACIFIC OCEAN", 
+    {
+      name: "PACIFIC OCEAN",
       position: [1.8, 0.12, -1.39] as [number, number, number],      // West side, back
-      surfacePosition: [1.125, 0.075, -0.87] as [number, number, number] 
+      surfacePosition: [1.125, 0.075, -0.87] as [number, number, number]
     },
-    { 
-      name: "ATLANTIC OCEAN", 
+    {
+      name: "ATLANTIC OCEAN",
       position: [0.53, 0.67, 2.11] as [number, number, number],      // Center-West, front
-      surfacePosition: [0.33, 0.42, 1.32] as [number, number, number] 
+      surfacePosition: [0.33, 0.42, 1.32] as [number, number, number]
     },
-    { 
-      name: "INDIAN OCEAN", 
+    {
+      name: "INDIAN OCEAN",
       position: [-1.39, -0.67, 1.68] as [number, number, number],    // East, below equator
-      surfacePosition: [-0.87, -0.42, 1.05] as [number, number, number] 
+      surfacePosition: [-0.87, -0.42, 1.05] as [number, number, number]
     },
-    { 
-      name: "ARCTIC OCEAN", 
+    {
+      name: "ARCTIC OCEAN",
       position: [0.0, 2.21, 0.48] as [number, number, number],       // Top of globe
-      surfacePosition: [0.0, 1.38, 0.3] as [number, number, number] 
+      surfacePosition: [0.0, 1.38, 0.3] as [number, number, number]
     },
-    { 
-      name: "SOUTHERN OCEAN", 
+    {
+      name: "SOUTHERN OCEAN",
       position: [0.36, -2.04, 0.84] as [number, number, number],     // Bottom, around Antarctica
-      surfacePosition: [0.225, -1.275, 0.525] as [number, number, number] 
+      surfacePosition: [0.225, -1.275, 0.525] as [number, number, number]
     },
   ];
-  
+
   // Show labels only for Earth model
   const isEarth = topicTitle === "Planet Earth";
-  
+
   return (
     <group>
       <primitive object={clonedScene} scale={1.5} />
-      
+
       {/* Continent Labels - Removed as per requirements */}
       {/* {isEarth && showContinents && continents.map((continent) => (
         <Label3D
@@ -188,7 +188,7 @@ const Model3D = ({ modelPath, showContinents, showOceans, topicTitle, showChambe
           surfacePosition={continent.surfacePosition}
         />
       ))} */}
-      
+
       {/* Ocean Labels - Removed as per requirements */}
       {/* {isEarth && showOceans && oceans.map((ocean) => (
         <Label3D
@@ -222,12 +222,12 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
   useEffect(() => {
     startCamera();
     requestDeviceOrientation();
-    
+
     // Hide instructions after 3 seconds
     const timer = setTimeout(() => {
       setShowInstructions(false);
     }, 3000);
-    
+
     return () => {
       stopCamera();
       clearTimeout(timer);
@@ -240,12 +240,12 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
         video: { facingMode: "environment" },
         audio: false
       });
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         setStream(mediaStream);
       }
-      
+
       toast.success("AR Mode Active! Move your camera to see the model from different angles");
     } catch (error) {
       console.error("Camera error:", error);
@@ -334,19 +334,21 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
           <ambientLight intensity={0.7} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
           <pointLight position={[-10, -10, -10]} intensity={0.8} />
-          
+
           <Suspense fallback={null}>
-            <Model3D 
-              modelPath={modelPath} 
-              showContinents={false} 
-              showOceans={false}
-              topicTitle={topicTitle}
-              showChambers={showChambers}
-              brainView={brainView}
-            />
+            <group rotation={[deviceOrientation.beta * 0.02, deviceOrientation.alpha * 0.02, 0]}>
+              <Model3D
+                modelPath={modelPath}
+                showContinents={false}
+                showOceans={false}
+                topicTitle={topicTitle}
+                showChambers={showChambers}
+                brainView={brainView}
+              />
+            </group>
             <Environment preset="city" />
           </Suspense>
-          
+
           <OrbitControls
             ref={controlsRef}
             enableDamping
@@ -401,11 +403,10 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
             }}
             variant="outline"
             size="sm"
-            className={`backdrop-blur-sm border-white/20 transition-all ${
-              showChambers 
-                ? 'bg-red-500/90 text-white hover:bg-red-600' 
+            className={`backdrop-blur-sm border-white/20 transition-all ${showChambers
+                ? 'bg-red-500/90 text-white hover:bg-red-600'
                 : 'bg-black/50 text-white hover:bg-black/70'
-            }`}
+              }`}
           >
             <Scissors className="w-4 h-4 mr-2" />
             Chambers
@@ -424,16 +425,15 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
             }}
             variant="outline"
             size="sm"
-            className={`backdrop-blur-sm border-white/20 transition-all ${
-              brainView === 'crossSection'
-                ? 'bg-purple-500/90 text-white hover:bg-purple-600' 
+            className={`backdrop-blur-sm border-white/20 transition-all ${brainView === 'crossSection'
+                ? 'bg-purple-500/90 text-white hover:bg-purple-600'
                 : 'bg-black/50 text-white hover:bg-black/70'
-            }`}
+              }`}
           >
             <ScanEye className="w-4 h-4 mr-2" />
             Cross Section
           </Button>
-          
+
           <Button
             onClick={() => {
               const newView = brainView === 'brainstem' ? 'default' : 'brainstem';
@@ -442,11 +442,10 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
             }}
             variant="outline"
             size="sm"
-            className={`backdrop-blur-sm border-white/20 transition-all ${
-              brainView === 'brainstem'
-                ? 'bg-blue-500/90 text-white hover:bg-blue-600' 
+            className={`backdrop-blur-sm border-white/20 transition-all ${brainView === 'brainstem'
+                ? 'bg-blue-500/90 text-white hover:bg-blue-600'
                 : 'bg-black/50 text-white hover:bg-black/70'
-            }`}
+              }`}
           >
             <Brain className="w-4 h-4 mr-2" />
             Brainstem
@@ -465,7 +464,7 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
           >
             <ZoomOut className="w-5 h-5" />
           </Button>
-          
+
           <Button
             onClick={handleReset}
             variant="outline"
@@ -475,7 +474,7 @@ export const ARModelViewer = ({ modelPath, topicTitle, onClose }: ARModelViewerP
             <RotateCcw className="w-5 h-5 mr-2" />
             Reset View
           </Button>
-          
+
           <Button
             onClick={handleZoomIn}
             variant="outline"
